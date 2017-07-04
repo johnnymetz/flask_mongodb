@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Flask + MongoDB</title>
+  <meta charset="utf-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<h2>Flask + MongoDB</h2>
+			<p>CRUD Operations</p>
+		</div>
+
+		<!-- Flashed Messages -->
+		{% if get_flashed_messages() %}
+    	{% for message in get_flashed_messages() %}
+    		<li>{{ message }}</li>
+    	{% endfor %}
+		{% endif %}
+
+
+		<!-- Add to Database -->
+		<div class="row">
+			<div class="col-sm-6">
+				<h3 class="text-center">Create</h3>
+				<form method="POST" action="/add_data">
+					<div class="form-group">
+						<label for="collection" class="control-label">MongoDB Collection:</label>
+						<input type="text" id="collection" name="collection" class="form-control" value="{{ active_collection }}" required>
+					</div>
+					<div class="form-group">
+						<label for="name" class="control-label">Name:</label>
+						<input type="text" id="name" name="name" class="form-control" placeholder="Brad" required>
+					</div>
+					<div class="form-group">
+						<label for="age" class="control-label">Age:</label>
+						<input type="number" id="age" name="age" class="form-control" placeholder="24" required>
+					</div>
+					<div class="form-group">
+						<label for="location" class="control-label">Location:</label>
+						<input type="text" id="location" name="location" class="form-control" placeholder="San Diego" required>
+					</div>
+					<button type="submit" class="btn btn-primary">Add</button>
+				</form>
+			</div>
+		</div>
+
+		
+
+		<!-- Display content -->
+		<div class="row">
+			<div class="col-sm-12">
+				<h3 class="text-center">Read and Delete</h3>
+
+				<!-- Change current collection -->
+				<form method="POST" action="/change_collection" class="form-inline">
+					<div class="form-group">
+						<label for="collection_name" class="control-label">Active Collection:</label>
+						<select class="form-control" name="collection_name" id="collection_name">
+							{% for collection in all_collections %}
+								<option value="{{ collection }}">{{ collection }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary">Update</button>
+				</form>
+
+				<!-- Display contents in current collection -->
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Age</th>
+							<th>Location</th>
+							<th>_id</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for item in data %}
+							<tr>
+								<td>{{ item.name }}</td>
+								<td>{{ item.age }}</td>
+								<td>{{ item.location }}</td>
+								<td>{{ item._id }}</td>
+								<td>
+									<a href="{{ url_for('delete_data', id=item._id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+									<button class="btn btn-default" id="edit"></button>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<p><small>_id is automatically assigned by MongoDB if not explicity assigned</small></p>
+			</div>
+		</div>
+
+
+
+
+
+
+
+		</div><!-- .container -->
+
+  <script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script>
+
+  	$(document).ready(function(){
+
+  		// Set value of select to active_collection
+  		$('#collection_name').val({{ active_collection | tojson }});
+
+  	});
+
+  </script>
+</body>
+</html>
