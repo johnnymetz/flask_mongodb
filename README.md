@@ -1,8 +1,10 @@
 # flask_mongodb
 Flask + MongoDB Demo. Demonstrates basic setup and CRUD operations.
 
-### Flask-PyMongo: https://flask-pymongo.readthedocs.io/en/latest/
+### Flask-PyMongo:
 - Configure and connect to MongoDB
-### PyMongo: http://api.mongodb.com/python/current/api/index.html
+- Docs: https://flask-pymongo.readthedocs.io/en/latest/
+### PyMongo:
 - Python Driver for MongoDB
 - Tutorial: http://api.mongodb.com/python/current/tutorial.html
+- Docs: http://api.mongodb.com/python/current/api/index.html
