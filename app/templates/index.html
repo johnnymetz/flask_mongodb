@@ -13,19 +13,18 @@
 			<p>CRUD Operations</p>
 		</div>
 
-		<!-- Flashed Messages -->
-		{% if get_flashed_messages() %}
-    	{% for message in get_flashed_messages() %}
-    		<li>{{ message }}</li>
-    	{% endfor %}
-		{% endif %}
+		<!-- Flashed Messages (Feedback) -->
+		{% from 'macros_helpers.html' import flash_alerts %}
+		{{ flash_alerts(center_message=True) }}
 
 
-		<!-- Add to Database -->
 		<div class="row">
+
+			<!-- Add data to Database -->
 			<div class="col-sm-6">
 				<h3 class="text-center">Create</h3>
-				<form method="POST" action="/add_data">
+				<p class="text-center"><small>Add a document to a MongoDB collection of choice.</small></p>
+				<form method="POST" action="/add">
 					<div class="form-group">
 						<label for="collection" class="control-label">MongoDB Collection:</label>
 						<input type="text" id="collection" name="collection" class="form-control" value="{{ active_collection }}" required>
@@ -35,20 +34,23 @@
 						<input type="text" id="name" name="name" class="form-control" placeholder="Brad" required>
 					</div>
 					<div class="form-group">
-						<label for="age" class="control-label">Age:</label>
-						<input type="number" id="age" name="age" class="form-control" placeholder="24" required>
-					</div>
-					<div class="form-group">
 						<label for="location" class="control-label">Location:</label>
 						<input type="text" id="location" name="location" class="form-control" placeholder="San Diego" required>
 					</div>
 					<button type="submit" class="btn btn-primary">Add</button>
 				</form>
-			</div>
-		</div>
+			</div><!-- .col-sm-6 -->
+
+			<!-- Update data in Database -->
+			<div class="col-sm-6">
+				<h3 class="text-center">Update</h3>
+				<p class="text-center"><small>Click <span class="glyphicon glyphicon-pencil"></span> in table below to edit a document.</small></p>
+				<div id="updateArea"></div>
+			</div><!-- .col-sm-6 -->
+
+		</div><!-- .row -->
 
 		
-
 		<!-- Display content -->
 		<div class="row">
 			<div class="col-sm-12">
@@ -64,15 +66,14 @@
 							{% endfor %}
 						</select>
 					</div>
-					<button type="submit" class="btn btn-primary">Update</button>
+					<button type="submit" class="btn btn-primary">Read</button>
 				</form>
 
-				<!-- Display contents in current collection -->
+				<!-- Display content in current collection -->
 				<table class="table table-bordered table-hover">
 					<thead>
 						<tr>
 							<th>Name</th>
-							<th>Age</th>
 							<th>Location</th>
 							<th>_id</th>
 							<th>Delete</th>
@@ -80,14 +81,13 @@
 					</thead>
 					<tbody>
 						{% for item in data %}
-							<tr>
+							<tr data-id="{{ item._id }}" data-name="{{ item.name }}" data-location="{{ item.location }}">
 								<td>{{ item.name }}</td>
-								<td>{{ item.age }}</td>
 								<td>{{ item.location }}</td>
 								<td>{{ item._id }}</td>
 								<td>
-									<a href="{{ url_for('delete_data', id=item._id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-									<button class="btn btn-default" id="edit"></button>
+									<button class="btn btn-default edit-btn"><span class="glyphicon glyphicon-pencil"></span></button>
+									<a href="{{ url_for('delete', id=item._id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
 								</td>
 							</tr>
 						{% endfor %}
@@ -98,12 +98,7 @@
 		</div>
 
 
-
-
-
-
-
-		</div><!-- .container -->
+	</div><!-- .container -->
 
   <script src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
@@ -114,6 +109,36 @@
 
   		// Set value of select to active_collection
   		$('#collection_name').val({{ active_collection | tojson }});
+
+  		// Add update form to DOM and populate
+  		$('.edit-btn').click(function(){
+
+  			// Clear old
+  			$('#updateArea').empty();
+
+  			// Get current values
+  			var _id = $(this).closest('tr').data('id');
+  			var name = $(this).closest('tr').data('name');
+  			var location = $(this).closest('tr').data('location');
+  			var current_values = [_id, name, location];
+  			var keys = ['_id', 'name', 'location'];
+
+  			// Build update form and add to DOM
+  			var form = $('<form>', {'method': 'POST', 'action': '/update/' + _id}).appendTo($('#updateArea'));
+
+  			$.each(keys, function(index, key){
+  				var current_value = current_values[index];
+  				console.log(key, current_value);
+  				var formGroup = $('<div>', {'class': 'form-group'}).appendTo(form);
+  				var label = $('<label>', {'for': 'update_' + key, 'class': 'control-label'}).text(key + ':').appendTo(formGroup);
+  				var input = $('<input>', {'type': 'text', 'id': 'update_' + key, 'name': key, 'class': 'form-control', 'value': current_value}).appendTo(formGroup);
+  				if (key == '_id'){
+  					input.prop('readonly', 'true');
+  				};
+  			});
+
+  			$('<button>', {'type': 'submit', 'class': 'btn btn-primary'}).text('Update').appendTo(form);
+  		});
 
   	});
 

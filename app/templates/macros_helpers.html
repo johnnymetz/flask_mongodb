@@ -1,0 +1,27 @@
+<!-- Individual Flash Alerts Macro Description -->
+{# Renders Flash Alert.
+
+Example:  {{ flash_alerts() }}
+
+#}
+
+<!-- Individual Flash Alerts -->
+{% macro flash_alerts(flash_messages=get_flashed_messages(with_categories=True), center_message=False) -%}
+
+	<!-- Alert for each Flash Message -->
+	{% if flash_messages %}
+  	{% for category, message in flash_messages %}
+  		<div class="alert alert-{{ category | replace('message', 'info') }} alert-dismissible" role="alert">
+		    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		    <p {% if center_message %} class="text-center" {% endif %}>{{ message }}</p>
+		  </div>
+  	{% endfor %}
+	{% endif %}
+
+{%- endmacro %}
+
+
+
+
+
+
