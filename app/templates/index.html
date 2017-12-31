@@ -22,30 +22,34 @@
 
 			<!-- Add data to Database -->
 			<div class="col-sm-6">
-				<h3 class="text-center">Create</h3>
-				<p class="text-center"><small>Add a document to a MongoDB collection of choice.</small></p>
-				<form method="POST" action="/add">
-					<div class="form-group">
-						<label for="collection" class="control-label">MongoDB Collection:</label>
-						<input type="text" id="collection" name="collection" class="form-control" value="{{ active_collection }}" required>
-					</div>
-					<div class="form-group">
-						<label for="name" class="control-label">Name:</label>
-						<input type="text" id="name" name="name" class="form-control" placeholder="Brad" required>
-					</div>
-					<div class="form-group">
-						<label for="location" class="control-label">Location:</label>
-						<input type="text" id="location" name="location" class="form-control" placeholder="San Diego" required>
-					</div>
-					<button type="submit" class="btn btn-primary">Add</button>
-				</form>
+				<div class="well">
+					<h3 class="text-center">Create</h3>
+					<p class="text-center"><small>Add a document to a MongoDB collection of choice.</small></p>
+					<form method="POST" action="/add">
+						<div class="form-group">
+							<label for="collection" class="control-label">MongoDB Collection:</label>
+							<input type="text" id="collection" name="collection" class="form-control" value="{{ active_collection }}" required>
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label">Name:</label>
+							<input type="text" id="name" name="name" class="form-control" placeholder="Johnny" required>
+						</div>
+						<div class="form-group">
+							<label for="location" class="control-label">Location:</label>
+							<input type="text" id="location" name="location" class="form-control" placeholder="San Diego" required>
+						</div>
+						<button type="submit" class="btn btn-primary">Add</button>
+					</form>
+				</div><!-- .well -->
 			</div><!-- .col-sm-6 -->
 
 			<!-- Update data in Database -->
 			<div class="col-sm-6">
-				<h3 class="text-center">Update</h3>
-				<p class="text-center"><small>Click <span class="glyphicon glyphicon-pencil"></span> in table below to edit a document.</small></p>
-				<div id="updateArea"></div>
+				<div class="well">
+					<h3 class="text-center">Update</h3>
+					<p class="text-center"><small>Click <span class="glyphicon glyphicon-pencil"></span> in table below to edit a document.</small></p>
+					<div id="updateArea"></div>
+				</div><!-- .well -->
 			</div><!-- .col-sm-6 -->
 
 		</div><!-- .row -->
@@ -54,48 +58,50 @@
 		<!-- Display content -->
 		<div class="row">
 			<div class="col-sm-12">
-				<h3 class="text-center">Read and Delete</h3>
+				<div class="well">
+					<h3 class="text-center">Read and Delete</h3>
 
-				<!-- Change current collection -->
-				<form method="POST" action="/change_collection" class="form-inline">
-					<div class="form-group">
-						<label for="collection_name" class="control-label">Active Collection:</label>
-						<select class="form-control" name="collection_name" id="collection_name">
-							{% for collection in all_collections %}
-								<option value="{{ collection }}">{{ collection }}</option>
-							{% endfor %}
-						</select>
-					</div>
-					<button type="submit" class="btn btn-primary">Read</button>
-				</form>
+					<!-- Change current collection -->
+					<form method="POST" action="/change_collection" class="form-inline">
+						<div class="form-group">
+							<label for="collection_name" class="control-label">Active Collection:</label>
+							<select class="form-control" name="collection_name" id="collection_name">
+								{% for collection in all_collections %}
+									<option value="{{ collection }}">{{ collection }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<button type="submit" class="btn btn-primary">Read</button>
+					</form>
 
-				<!-- Display content in current collection -->
-				<table class="table table-bordered table-hover">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Location</th>
-							<th>_id</th>
-							<th>Delete</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for item in data %}
-							<tr data-id="{{ item._id }}" data-name="{{ item.name }}" data-location="{{ item.location }}">
-								<td>{{ item.name }}</td>
-								<td>{{ item.location }}</td>
-								<td>{{ item._id }}</td>
-								<td>
-									<button class="btn btn-default edit-btn"><span class="glyphicon glyphicon-pencil"></span></button>
-									<a href="{{ url_for('delete', id=item._id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-								</td>
+					<!-- Display content in current collection -->
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Location</th>
+								<th>_id</th>
+								<th>Modify / Delete</th>
 							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-				<p><small>_id is automatically assigned by MongoDB if not explicity assigned</small></p>
-			</div>
-		</div>
+						</thead>
+						<tbody>
+							{% for item in data %}
+								<tr data-id="{{ item._id }}" data-name="{{ item.name }}" data-location="{{ item.location }}">
+									<td>{{ item.name }}</td>
+									<td>{{ item.location }}</td>
+									<td>{{ item._id }}</td>
+									<td>
+										<button class="btn btn-default edit-btn"><span class="glyphicon glyphicon-pencil"></span></button>
+										<a href="{{ url_for('delete', id=item._id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+					<p><small>_id is automatically assigned by MongoDB if not explicity assigned</small></p>
+				</div><!-- .well -->
+			</div><!-- .col-sm-12 -->
+		</div><!-- .row -->
 
 
 	</div><!-- .container -->

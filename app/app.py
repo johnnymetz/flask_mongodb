@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
+app.config['MONGO_CONNECT_TIMEOUT_MS'] = 1000  # timeout in milliseconds
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/myDB'
 
 mongo = PyMongo(app)
